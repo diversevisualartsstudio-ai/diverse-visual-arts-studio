@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DVAS — Revenue & Security Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --dvas-bg: #0D0D11;
+      --dvas-card: #16161E;
+      --dvas-pink: #FF007F;
+      --dvas-green: #39FF14;
+      --dvas-orange: #FF5E00;
+      --dvas-cyan: #00F0FF;
+    }
+    body { background-color: var(--dvas-bg); color: #F4F4F6; font-family: system-ui, sans-serif; }
+    .neon-border-pink { border-color: var(--dvas-pink); box-shadow: 0 0 12px rgba(255,0,127,0.3); }
+    .neon-border-green { border-color: var(--dvas-green); box-shadow: 0 0 12px rgba(57,255,20,0.3); }
+    .metallic-title { background: linear-gradient(135deg, #FFF 0%, #FF007F 50%, #00F0FF 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  </style>
+</head>
+<body class="min-h-screen p-6">
+
+  <!-- Header & Navigation -->
+  <header class="flex flex-wrap items-center justify-between pb-6 mb-8 border-b border-gray-800">
+    <div class="flex items-center space-x-3">
+      <div class="w-10 h-10 rounded-full border-2 border-[#FF007F] flex items-center justify-center font-bold text-[#39FF14]">DVAS</div>
+      <h1 class="text-2xl font-extrabold tracking-wider metallic-title">DIVERSE VISUAL ARTS STUDIO</h1>
+    </div>
+    
+    <div class="flex items-center space-x-4">
+      <div class="px-3 py-1 text-xs rounded-full bg-[#16161E] border border-[#39FF14] text-[#39FF14] flex items-center space-x-2">
+        <span class="w-2 h-2 rounded-full bg-[#39FF14] animate-pulse"></span>
+        <span>MFA SESSION ACTIVE</span>
+      </div>
+      <select id="roleSelect" onchange="switchRole(this.value)" class="bg-[#16161E] border border-gray-700 text-sm rounded px-3 py-1">
+        <option value="admin">Role: Admin (Owner)</option>
+        <option value="client">Role: Client / Hirer</option>
+        <option value="investor">Role: Investor / Sponsor</option>
+      </select>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <div class="flex space-x-4 mb-8">
+    <button onclick="showTab('client')" id="btn-client" class="px-5 py-2 rounded font-semibold text-sm bg-[#FF007F] text-white">Client Workspace</button>
+    <button onclick="showTab('investor')" id="btn-investor" class="px-5 py-2 rounded font-semibold text-sm bg-[#16161E] text-gray-400">Investor Hub</button>
+    <button onclick="showTab('admin')" id="btn-admin" class="px-5 py-2 rounded font-semibold text-sm bg-[#16161E] text-gray-400">Admin Console</button>
+  </div>
+
+  <!-- TAB 1: CLIENT WORKSPACE -->
+  <section id="tab-client" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div class="bg-[#16161E] border border-gray-800 rounded-xl p-6">
+      <h2 class="text-lg font-bold text-[#FF007F] mb-4">Project Intake Wizard (IBM Bob Assisted)</h2>
+      <form onsubmit="handleIntake(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-mono text-gray-400 mb-1">PROJECT TYPE</label>
+          <select class="w-full bg-[#0D0D11] border border-gray-700 rounded p-2 text-sm">
+            <option>Brand Identity & Vector Layout</option>
+            <option>Cybersecurity Diagram & Infographics</option>
+            <option>Custom Web / UI Design</option>
+            <option>AI Video Rendering & Motion Assets</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-mono text-gray-400 mb-1">PROJECT SCOPE & OBJECTIVES</label>
+          <textarea rows="3" class="w-full bg-[#0D0D11] border border-gray-700 rounded p-2 text-sm" placeholder="Describe scope, assets, and design preferences..."></textarea>
+        </div>
+        <button type="submit" class="w-full py-3 bg-[#FF007F] font-bold text-sm rounded hover:opacity-90">Initiate Pre-Scan & Brief Generation</button>
+      </form>
+      <div id="intakeStatus" class="hidden mt-4 p-3 bg-[#0D0D11] border border-[#39FF14] text-[#39FF14] text-xs font-mono rounded">
+        ✓ IBM Bob Pre-Scan Complete: Security baseline verified. Brief routed to Admin queue.
+      </div>
+    </div>
+
+    <div class="bg-[#16161E] border border-gray-800 rounded-xl p-6">
+      <h2 class="text-lg font-bold text-[#00F0FF] mb-4">Active Milestone Tracker</h2>
+      <div class="mb-4">
+        <div class="flex justify-between text-xs font-mono mb-1">
+          <span>STATUS: IN PROGRESS</span>
+          <span>65%</span>
+        </div>
+        <div class="w-full bg-gray-800 rounded-full h-2">
+          <div class="bg-[#39FF14] h-2 rounded-full" style="width: 65%"></div>
+        </div>
+      </div>
+      <ul class="text-sm space-y-2 text-gray-300 font-mono">
+        <li>✓ Step 1: Brief Processed & IAM Verified</li>
+        <li>✓ Step 2: Threat Modeling & SAST Guardrails Applied</li>
+        <li>► Step 3: Vector Asset Rendering & Encryption Scan</li>
+        <li class="text-gray-600">○ Step 4: Vault Delivery & Smart Contract Release</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- TAB 2: INVESTOR HUB -->
+  <section id="tab-investor" class="hidden space-y-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="bg-[#16161E] border border-gray-800 p-6 rounded-xl">
+        <p class="text-xs font-mono text-gray-400">ACTIVE CLIENT PROJECTS</p>
+        <p class="text-3xl font-extrabold text-[#39FF14] mt-2">18</p>
+      </div>
+      <div class="bg-[#16161E] border border-gray-800 p-6 rounded-xl">
+        <p class="text-xs font-mono text-gray-400">DIGITAL ASSET VOLUME</p>
+        <p class="text-3xl font-extrabold text-[#00F0FF] mt-2">142</p>
+      </div>
+      <div class="bg-[#16161E] border border-gray-800 p-6 rounded-xl">
+        <p class="text-xs font-mono text-gray-400">QoQ REVENUE GROWTH</p>
+        <p class="text-3xl font-extrabold text-[#FF007F] mt-2">+34.5%</p>
+      </div>
+    </div>
+
+    <div class="bg-[#16161E] border border-gray-800 p-6 rounded-xl">
+      <h3 class="text-lg font-bold text-[#FF5E00] mb-4">Ask IBM Bob (Investor Assistant)</h3>
+      <div class="flex space-x-2">
+        <input id="chatInput" type="text" class="flex-1 bg-[#0D0D11] border border-gray-700 rounded p-2 text-sm" placeholder="Ask about revenue projections, asset volume, or security guardrails...">
+        <button onclick="askBob()" class="px-4 py-2 bg-[#FF5E00] font-bold text-sm rounded">Query</button>
+      </div>
+      <div id="chatOutput" class="hidden mt-4 p-3 bg-[#0D0D11] text-xs font-mono text-gray-300 rounded border border-gray-800"></div>
+    </div>
+  </section>
+
+  <!-- TAB 3: ADMIN CONSOLE -->
+  <section id="tab-admin" class="hidden space-y-8">
+    <div class="bg-[#16161E] border border-gray-800 p-6 rounded-xl">
+      <h3 class="text-lg font-bold text-[#39FF14] mb-4">Real-Time Threat & Audit Ledger</h3>
+      <table class="w-full text-left text-xs font-mono">
+        <thead>
+          <tr class="border-b border-gray-800 text-gray-400">
+            <th class="py-2">TIMESTAMP</th>
+            <th>USER / ROLE</th>
+            <th>ACTION</th>
+            <th>SECURITY FLAG</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-800">
+          <tr>
+            <td class="py-2 text-gray-500">12:54:10</td>
+            <td>client_8819</td>
+            <td>PROJECT_INTAKE_SUBMIT</td>
+            <td class="text-[#39FF14]">PASSED (0 Threats)</td>
+          </tr>
+          <tr>
+            <td class="py-2 text-gray-500">12:48:02</td>
+            <td>investor_002</td>
+            <td>ANALYTICS_VIEW_QUERY</td>
+            <td class="text-[#39FF14]">PASSED (Scoped View)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <script>
+    function showTab(tabName) {
+      ['client', 'investor', 'admin'].forEach(t => {
+        document.getElementById(`tab-${t}`).classList.add('hidden');
+        document.getElementById(`btn-${t}`).className = "px-5 py-2 rounded font-semibold text-sm bg-[#16161E] text-gray-400";
+      });
+      document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+      document.getElementById(`btn-${tabName}`).className = "px-5 py-2 rounded font-semibold text-sm bg-[#FF007F] text-white";
+    }
+
+    function handleIntake(e) {
+      e.preventDefault();
+      document.getElementById('intakeStatus').classList.remove('hidden');
+    }
+
+    function askBob() {
+      const q = document.getElementById('chatInput').value;
+      const out = document.getElementById('chatOutput');
+      out.classList.remove('hidden');
+      out.innerText = `[IBM Bob]: Query parsed: "${q}". Studio growth remains strong at +34.5% QoQ with zero reported smart contract vulnerabilities.`;
+    }
+
+    function switchRole(role) {
+      showTab(role === 'admin' ? 'admin' : role === 'investor' ? 'investor' : 'client');
+    }
+  </script>
+</body>
+</html>
