@@ -1,26 +1,17 @@
-# diverse-visual-arts-studio
+# Diverse Visual Arts Studio Setup
 
-AI agent-powered design studio using IBM watsonx Orchestrate, IBM Bob, and cybersecurity pipelines.
+This repository is written to run as a static front-end experience by default.
 
-## GitHub Pages status
+## Default behavior
 
-This repository is configured to work in a safe GitHub Pages demo mode by default.
+- No Supabase or database credentials are required for the demo experience.
+- The app uses browser local storage for sample project data.
+- GitHub Pages can host the site without a backend configuration.
 
-- If `config.js` contains empty values, the portal loads in demo mode.
-- Demo mode keeps the site functional without Supabase or IBM credentials.
-- When you are ready to enable live auth, storage, and AI, replace the empty values in `config.js`, set up Supabase, and deploy the Edge Function.
+## When to add a backend
 
-## Live demo
+If you later want to connect live project storage, auth, or AI features, you can add a custom backend service separately. The default repository state is intentionally kept simple and self-contained for safe demo deployment.
 
-The site can be previewed directly as a static page on GitHub Pages without needing a backend configured.
+## Preview
 
-## Production setup
-
-See `SETUP.md` for the secure live setup path involving:
-
-- Supabase Auth
-- RLS-protected project tables
-- IBM watsonx AI Edge Function
-- GitHub Pages hosting
-- custom domain configuration
-
+Open the project locally or publish it from the `main` branch in GitHub Pages.
