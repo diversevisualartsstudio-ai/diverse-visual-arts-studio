@@ -1,21 +1,11 @@
 # Diverse Visual Arts Studio
 
-AI agent-powered design studio for brand, revenue, security, and creative operations.
+A static front end for the DVAS project portal. Authentication and shared project data require a configured Supabase project; this repository does not include credentials.
 
-## Overview
+## Live setup
 
-This project is configured as a static GitHub Pages portal for demo and presentation use. The default experience is fully client-side and does not require a database or authentication service.
+Follow [SETUP.md](SETUP.md) before inviting users. The app is not live-ready until the backend, database migration, public browser configuration, and GitHub Pages deployment are configured.
 
-## Deployment
+## Hosting
 
-- Publish the repository to GitHub Pages or serve the static files locally.
-- The site runs in demo mode by default.
-- Project submissions are stored in browser local storage so the UI remains functional without a backend.
-
-## Local preview
-
-Open `index.html` directly in a browser or serve the folder with any static web server.
-
-## Notes
-
-The repository intentionally avoids external service requirements so it remains easy to preview and maintain in a public hosting environment.
+Publish the repository root with GitHub Pages. The default GitHub Pages URL is used; this repository does not require a custom domain.

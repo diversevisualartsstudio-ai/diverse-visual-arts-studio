@@ -1,7 +1,3 @@
-# DVAS Portal
+# Domain
 
-This file is for custom domain setup. Add your real custom domain name here when you are ready to publish under a branded domain.
-
-Example:
-
-portal.dvas.studio
+This repository uses its default GitHub Pages URL. No custom domain is configured here.

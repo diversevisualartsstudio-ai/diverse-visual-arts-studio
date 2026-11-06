@@ -1,220 +1,78 @@
-const DEMO_PROJECTS = [
-  { client_name: 'Aster Labs', project_type: 'Brand Identity & Vector Layout', budget: '$24,000', timeline: '4 weeks', scope: 'Identity refresh and launch toolkit.', status: 'review' },
-  { client_name: 'Vector Horizon', project_type: 'Cybersecurity Diagram & Infographics', budget: '$18,500', timeline: '3 weeks', scope: 'Threat model diagrams and SaaS security narrative.', status: 'approved' },
-  { client_name: 'Northstar Media', project_type: 'AI Video Rendering & Motion Assets', budget: '$32,000', timeline: '5 weeks', scope: 'Campaign motion kit and visual storyboards.', status: 'submitted' },
-  { client_name: 'Harbor One', project_type: 'Executive Portal UX Refresh', budget: '$21,000', timeline: '6 weeks', scope: 'Investor dashboard design and secure workflow mapping.', status: 'review' }
-];
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Diverse Visual Arts Studio client and project portal">
+  <title>DVAS Studio Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <main id="auth-screen" class="auth-shell">
+    <section class="auth-card">
+      <div class="brand-block"><div class="brand-mark">DVAS</div><div><p class="eyebrow">DIVERSE VISUAL ARTS STUDIO</p><h1>Studio Portal</h1></div></div>
+      <p class="intro">Sign in to your workspace or create an account to submit a project brief.</p>
+      <div id="auth-message" class="notice hidden" role="status" aria-live="polite"></div>
+      <form id="auth-form" class="form-grid">
+        <label>Email<input id="email" type="email" autocomplete="email" required></label>
+        <label>Password<input id="password" type="password" autocomplete="current-password" minlength="8" required></label>
+        <button id="auth-submit" type="submit">Sign in</button>
+      </form>
+      <button id="auth-mode-toggle" class="link-button" type="button">Need an account? Sign up</button>
+      <p class="fine-print">Use your studio account. New accounts may need email confirmation.</p>
+    </section>
+  </main>
 
-const STORAGE_KEYS = {
-  SESSION: 'dvas-portal-session',
-  PROJECTS: 'dvas-demo-projects'
-};
+  <main id="portal-screen" class="portal-shell hidden">
+    <header class="topbar">
+      <div class="brand-inline"><div class="brand-mark small">DVAS</div><div><p class="eyebrow">DIVERSE VISUAL ARTS STUDIO</p><h1>Studio Portal</h1></div></div>
+      <div class="topbar-actions"><span id="user-label" class="user-label"></span><span id="role-label" class="status-pill"></span><button id="logout-btn" class="secondary-button" type="button">Sign out</button></div>
+    </header>
+    <nav class="tab-nav" aria-label="Portal navigation">
+      <button class="tab active" data-tab="overview" type="button">Overview</button>
+      <button class="tab" data-tab="clients" data-role="client,admin" type="button">Client Workspace</button>
+      <button class="tab" data-tab="investors" data-role="investor,admin" type="button">Investor Hub</button>
+      <button class="tab" data-tab="admin" data-role="admin" type="button">Admin Console</button>
+    </nav>
+    <div id="portal-message" class="notice hidden" role="status" aria-live="polite"></div>
 
-const state = {
-  session: null,
-  profile: null,
-  signUpMode: false,
-  demoMode: true,
-  activeTab: 'overview'
-};
+    <section id="overview" class="tab-panel active">
+      <div class="stats-grid">
+        <article class="stat-card accent-pink"><span>Projects you can access</span><strong id="active-projects">—</strong><small>Live project records</small></article>
+        <article class="stat-card accent-cyan"><span>Revenue Run Rate</span><strong>—</strong><small>Connect a verified finance source</small></article>
+        <article class="stat-card accent-green"><span>Security Score</span><strong>—</strong><small>Connect a verified security source</small></article>
+        <article class="stat-card accent-orange"><span>Delivery SLA</span><strong>—</strong><small>Connect a verified delivery source</small></article>
+      </div>
+      <div class="dashboard-grid">
+        <section class="card-panel"><div class="panel-header"><h2>Project activity</h2><span class="meta-badge">Live</span></div><p>Project counts and details are loaded from your secured project database.</p></section>
+        <section class="card-panel"><div class="panel-header"><h2>Studio Assistant</h2><span class="meta-badge">watsonx.ai</span></div><form id="assistant-form" class="assistant-box"><input id="assistant-query" type="text" maxlength="4000" placeholder="Ask a studio question" required><button type="submit">Ask</button></form><p id="assistant-response" role="status" aria-live="polite"></p></section>
+      </div>
+    </section>
 
-const $ = (selector) => document.querySelector(selector);
+    <section id="clients" class="tab-panel">
+      <div class="two-column">
+        <section class="card-panel"><div class="panel-header"><h2>Project Intake</h2><span class="meta-badge">Secured submission</span></div>
+          <form id="project-form" class="form-grid">
+            <label>Client / Brand<input name="client" maxlength="120" required></label>
+            <label>Project type<select name="type"><option>Brand Identity &amp; Vector Layout</option><option>Cybersecurity Diagram &amp; Infographics</option><option>Custom Web / UI Design</option><option>AI Video Rendering &amp; Motion Assets</option><option>Other</option></select></label>
+            <label>Budget<input name="budget" maxlength="40" required></label>
+            <label>Timeline<input name="timeline" maxlength="80" required></label>
+            <label>Scope &amp; objectives<textarea name="scope" rows="4" maxlength="3000"></textarea></label>
+            <button type="submit">Submit project</button>
+          </form>
+        </section>
+        <section class="card-panel"><div class="panel-header"><h2>Your Projects</h2><button id="refresh-projects" class="secondary-button" type="button">Refresh</button></div><div id="project-list" class="project-list"></div></section>
+      </div>
+    </section>
 
-function safeText(tag, className, value) {
-  const node = document.createElement(tag);
-  if (className) node.className = className;
-  node.textContent = value == null ? '' : String(value);
-  return node;
-}
-
-function setTab(tab) {
-  state.activeTab = tab;
-  document.querySelectorAll('.tab').forEach((button) => button.classList.toggle('active', button.dataset.tab === tab));
-  document.querySelectorAll('.tab-panel').forEach((panel) => panel.classList.toggle('active', panel.id === tab));
-}
-
-function getDemoProjects() {
-  const saved = localStorage.getItem(STORAGE_KEYS.PROJECTS);
-  if (!saved) {
-    localStorage.setItem(STORAGE_KEYS.PROJECTS, JSON.stringify(DEMO_PROJECTS));
-    return DEMO_PROJECTS;
-  }
-
-  try {
-    const parsed = JSON.parse(saved);
-    return Array.isArray(parsed) && parsed.length ? parsed : DEMO_PROJECTS;
-  } catch (error) {
-    return DEMO_PROJECTS;
-  }
-}
-
-function renderProjectList(container, projects) {
-  container.replaceChildren();
-  if (!projects.length) {
-    container.append(safeText('p', 'empty-state', 'No projects to display yet.'));
-    return;
-  }
-
-  for (const project of projects) {
-    const item = document.createElement('article');
-    item.className = 'project-item';
-    item.append(safeText('h3', '', project.client_name || project.client || 'Untitled project'));
-    item.append(safeText('div', 'project-meta', `${project.project_type || project.type || 'General'} · ${project.budget || 'Budget pending'} · ${project.timeline || 'Timeline pending'} · ${project.status || 'pending'}`));
-    item.append(safeText('p', '', project.scope || 'No scope details provided.'));
-    container.append(item);
-  }
-}
-
-function showMessage(message, isError = false) {
-  const node = $('#auth-message');
-  if (!node) return;
-  node.textContent = message;
-  node.classList.toggle('hidden', !message);
-  node.classList.toggle('error', isError);
-}
-
-function setDemoModeNotice() {
-  if (state.demoMode) {
-    showMessage('Running in demo mode. This static portal is ready for GitHub Pages hosting without a backend service.');
-  }
-}
-
-function initializePortalState() {
-  state.profile = { role: 'admin', display_name: 'Demo Admin' };
-  state.session = { user: { id: 'demo-user', email: 'demo@dvas.studio' } };
-  $('#auth-screen').classList.add('hidden');
-  $('#portal-screen').classList.remove('hidden');
-  $('#user-label').textContent = 'Demo Admin';
-  $('#role-label').textContent = 'admin';
-  document.querySelectorAll('.tab[data-role]').forEach((tab) => {
-    const allowed = tab.dataset.role.split(',').includes('admin');
-    tab.classList.toggle('hidden', !allowed);
-  });
-  setTab('overview');
-  $('#active-projects').textContent = String(getDemoProjects().length);
-  renderProjectList($('#project-list'), getDemoProjects());
-  renderProjectList($('#investor-list'), getDemoProjects());
-  renderProjectList($('#admin-project-list'), getDemoProjects());
-}
-
-async function fetchProjects() {
-  const projects = getDemoProjects();
-  $('#active-projects').textContent = String(projects.length);
-  renderProjectList($('#project-list'), projects);
-  renderProjectList($('#investor-list'), projects);
-  renderProjectList($('#admin-project-list'), projects);
-}
-
-async function showPortal() {
-  state.profile = { role: 'admin', display_name: 'Demo Admin' };
-  $('#auth-screen').classList.add('hidden');
-  $('#portal-screen').classList.remove('hidden');
-  $('#user-label').textContent = 'Demo Admin';
-  $('#role-label').textContent = 'admin';
-  document.querySelectorAll('.tab[data-role]').forEach((tab) => {
-    const allowed = tab.dataset.role.split(',').includes('admin');
-    tab.classList.toggle('hidden', !allowed);
-  });
-  setTab('overview');
-  await fetchProjects();
-}
-
-async function handleAuth(event) {
-  event.preventDefault();
-
-  const email = $('#email').value.trim();
-  const password = $('#password').value.trim();
-  if (!email || !password || password.length < 6) {
-    showMessage('Use a valid email and a password with at least 6 characters in demo mode.', true);
-    return;
-  }
-
-  state.session = { user: { id: 'demo-user', email } };
-  state.profile = { role: 'admin', display_name: email.split('@')[0] };
-  $('#auth-screen').classList.add('hidden');
-  $('#portal-screen').classList.remove('hidden');
-  $('#user-label').textContent = state.profile.display_name;
-  $('#role-label').textContent = state.profile.role;
-  setTab('overview');
-  await fetchProjects();
-  showMessage('');
-}
-
-async function submitProject(event) {
-  event.preventDefault();
-  const form = new FormData(event.currentTarget);
-  const newProject = {
-    client_name: String(form.get('client') || '').trim(),
-    project_type: String(form.get('type') || '').trim(),
-    budget: String(form.get('budget') || '').trim(),
-    timeline: String(form.get('timeline') || '').trim(),
-    scope: String(form.get('scope') || '').trim() || 'Scope details pending confirmation.',
-    status: 'submitted'
-  };
-
-  if (!newProject.client_name || !newProject.budget || !newProject.timeline) {
-    showMessage('Please complete all required fields before submitting a project.', true);
-    return;
-  }
-
-  const projects = getDemoProjects();
-  projects.unshift(newProject);
-  localStorage.setItem(STORAGE_KEYS.PROJECTS, JSON.stringify(projects));
-  event.currentTarget.reset();
-  await fetchProjects();
-  showMessage('Project saved in demo mode.');
-}
-
-function generateDemoAnswer(question) {
-  const q = question.toLowerCase();
-  if (q.includes('risk') || q.includes('security')) {
-    return 'Security coverage is stable with MFA and access controls in place. Keep the current review process and continue to verify all client workstreams before release.';
-  }
-  if (q.includes('revenue') || q.includes('growth') || q.includes('profit')) {
-    return 'Revenue remains healthy with an improved run rate across active clients. Maintain focus on pipeline conversion and on-time delivery to sustain the current trend.';
-  }
-  if (q.includes('project') || q.includes('intake')) {
-    return 'A complete project brief should include scope, budget, timeline, deliverables, and security requirements before moving into review.';
-  }
-  if (q.includes('design') || q.includes('brand')) {
-    return 'Brand and design work should remain aligned to the approved identity system and the client-approved milestone plan.';
-  }
-  return 'The DVAS portal is functioning in demo mode. This static build is ready for GitHub Pages hosting without a database or auth backend.';
-}
-
-async function askAssistant(event) {
-  event.preventDefault();
-  const output = $('#assistant-response');
-  const question = $('#assistant-query').value.trim();
-  if (!question) return;
-
-  output.textContent = generateDemoAnswer(question);
-}
-
-async function start() {
-  $('#auth-form').addEventListener('submit', handleAuth);
-  $('#project-form').addEventListener('submit', submitProject);
-  $('#assistant-form').addEventListener('submit', askAssistant);
-  $('#refresh-projects').addEventListener('click', fetchProjects);
-  $('#auth-mode-toggle').addEventListener('click', () => {
-    state.signUpMode = !state.signUpMode;
-    $('#auth-submit').textContent = state.signUpMode ? 'Create account' : 'Sign in';
-    $('#auth-mode-toggle').textContent = state.signUpMode ? 'Already have an account? Sign in' : 'Need an account? Sign up';
-    showMessage('');
-  });
-  $('#logout-btn').addEventListener('click', () => {
-    state.session = null;
-    state.profile = null;
-    $('#portal-screen').classList.add('hidden');
-    $('#auth-screen').classList.remove('hidden');
-    $('#auth-form').reset();
-    showMessage('');
-    return;
-  });
-  document.querySelectorAll('.tab').forEach((button) => button.addEventListener('click', () => setTab(button.dataset.tab)));
-
-  setDemoModeNotice();
-  initializePortalState();
-}
-
-document.addEventListener('DOMContentLoaded', start);
+    <section id="investors" class="tab-panel"><section class="card-panel"><div class="panel-header"><h2>Investor Project Snapshot</h2><span class="meta-badge">Authorized records</span></div><div id="investor-list" class="project-list"></div></section></section>
+    <section id="admin" class="tab-panel"><section class="card-panel"><div class="panel-header"><h2>Admin Console</h2><span class="meta-badge">Role-restricted</span></div><p>Project records available to administrators.</p><div id="admin-project-list" class="project-list"></div></section></section>
+  </main>
+</body>
+</html>
