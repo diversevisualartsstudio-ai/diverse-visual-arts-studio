@@ -1,50 +1,17 @@
 # DVAS Portal
 
-This repository includes a static GitHub Pages portal for the Diverse Visual Arts Studio. It contains:
+Static GitHub Pages frontend with Supabase Auth/database integration scaffolding and a protected IBM watsonx.ai Edge Function.
 
-- a secure-feeling login flow
-- client workspace intake form
-- investor dashboard
-- admin audit console
-- IBM Bob assistant interaction
-- project queue tracking in local browser storage
+## Setup
 
-## Local preview
+Follow [SETUP.md](SETUP.md) to configure Supabase authentication, database row-level security, the assistant function, GitHub Pages, and a custom domain. The portal intentionally does not include credentials. `config.js` contains placeholders until you add your Supabase project values; IBM credentials must be stored as Supabase Edge Function secrets.
 
-Open `index.html` directly in a browser, or use a local static server:
+## Features
 
-```bash
-python -m http.server 8000
-```
+- Supabase email/password sign-up, verification, sign-in, and sign-out.
+- Client project intake stored in a Supabase database with role-based RLS.
+- Role-gated client, investor, and admin portal views.
+- Server-side watsonx.ai integration scaffold; no IBM key is exposed in the browser.
+- Custom domain and DNS setup checklist.
 
-Then visit http://localhost:8000
-
-## GitHub Pages deployment
-
-1. Push this repository to GitHub.
-2. Open GitHub Repository -> Settings -> Pages.
-3. Set Source to `Deploy from a branch`.
-4. Select branch `main` and folder `/ (root)`.
-5. Save.
-
-Your static site will be published at:
-
-https://diversevisualartsstudio-ai.github.io/diverse-visual-arts-studio/
-
-## Custom domain setup
-
-If you have a custom domain, add a `CNAME` file to the root of the repo with the domain name only, for example:
-
-```text
-portal.dvas.studio
-```
-
-Then add the corresponding DNS record at your domain provider:
-
-- Type: CNAME
-- Name: `www` or the host you want
-- Value: `diversevisualartsstudio-ai.github.io`
-
-## Notes
-
-This is a static front-end implementation. Because GitHub Pages does not support a server-side backend directly, the project submission flow and login flow are implemented with browser-side localStorage for demo and prototype use. For production use, you would connect the form to a secure backend or service such as Supabase, Firebase, Netlify Functions, or a custom API.
+The investor figures and chart are illustrative placeholders, not actual financial records. The project list is database-backed after configuration.

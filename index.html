@@ -1,298 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DVAS Portal</title>
-    <meta
-      name="description"
-      content="DVAS Revenue & Security Portal with client workspace, investor analytics, and IBM Bob assistant support."
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <div id="app-shell">
-      <aside id="auth-screen" class="auth-shell">
-        <div class="auth-card">
-          <div class="brand-block">
-            <div class="brand-mark">DVAS</div>
-            <div>
-              <p class="eyebrow">REVENUE / SECURITY / DESIGN</p>
-              <h1>DVAS Portal</h1>
-            </div>
-          </div>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="DVAS Revenue & Security Portal">
+  <title>DVAS Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <main id="auth-screen" class="auth-shell">
+    <section class="auth-card">
+      <div class="brand-block"><div class="brand-mark">DVAS</div><div><p class="eyebrow">REVENUE / SECURITY / DESIGN</p><h1>DVAS Portal</h1></div></div>
+      <p class="intro">Sign in to your studio workspace, or create an account to submit a project brief.</p>
+      <div id="auth-message" class="notice hidden" role="status" aria-live="polite"></div>
+      <form id="auth-form" class="form-grid">
+        <label>Email<input id="email" type="email" autocomplete="email" required></label>
+        <label>Password<input id="password" type="password" autocomplete="current-password" minlength="8" required></label>
+        <button id="auth-submit" type="submit">Sign in</button>
+      </form>
+      <button id="auth-mode-toggle" class="link-button" type="button">Need an account? Sign up</button>
+      <p class="fine-print">Authentication is provided by Supabase. Demo login is disabled; never enter credentials until deployment is configured.</p>
+    </section>
+  </main>
 
-          <div class="badge-row">
-            <span class="status-pill success">MFA Active</span>
-            <span class="status-pill neutral">IBM Bob Ready</span>
-          </div>
+  <main id="portal-screen" class="portal-shell hidden">
+    <header class="topbar">
+      <div class="brand-inline"><div class="brand-mark small">DVAS</div><div><p class="eyebrow">DIVERSE VISUAL ARTS STUDIO</p><h1>Revenue & Security Portal</h1></div></div>
+      <div class="topbar-actions"><span id="user-label" class="user-label"></span><span id="role-label" class="status-pill"></span><button id="logout-btn" class="secondary-button" type="button">Sign out</button></div>
+    </header>
+    <nav id="tab-nav" class="tab-nav" aria-label="Portal navigation">
+      <button class="tab active" data-tab="overview" type="button">Overview</button>
+      <button class="tab" data-tab="clients" data-role="client,admin" type="button">Client Workspace</button>
+      <button class="tab" data-tab="investors" data-role="investor,admin" type="button">Investor Hub</button>
+      <button class="tab" data-tab="admin" data-role="admin" type="button">Admin Console</button>
+    </nav>
 
-          <form id="login-form" class="login-form">
-            <label>
-              <span>Email</span>
-              <input id="email" type="email" placeholder="name@dvas.studio" required />
-            </label>
+    <section id="overview" class="tab-panel active">
+      <div class="stats-grid">
+        <article class="stat-card accent-pink"><span>Active Projects</span><strong id="active-projects">—</strong><small>Based on your access</small></article>
+        <article class="stat-card accent-cyan"><span>Revenue Run Rate</span><strong>$1.42M</strong><small>Illustrative demo metric</small></article>
+        <article class="stat-card accent-green"><span>Security Score</span><strong>—</strong><small>Connect a verified source for live data</small></article>
+        <article class="stat-card accent-orange"><span>Delivery SLA</span><strong>—</strong><small>Connect a verified source for live data</small></article>
+      </div>
+      <div class="dashboard-grid">
+        <section class="card-panel"><div class="panel-header"><h2>Performance Trend</h2><span class="meta-badge">Illustrative</span></div><div class="chart-bars" aria-label="Illustrative monthly performance chart"><div class="bar-group"><span style="--value:42%"></span><label>Jan</label></div><div class="bar-group"><span style="--value:58%"></span><label>Feb</label></div><div class="bar-group"><span style="--value:63%"></span><label>Mar</label></div><div class="bar-group"><span style="--value:70%"></span><label>Apr</label></div><div class="bar-group"><span style="--value:78%"></span><label>May</label></div><div class="bar-group"><span style="--value:90%"></span><label>Jun</label></div></div></section>
+        <section class="card-panel"><div class="panel-header"><h2>Ask the AI Assistant</h2><span class="meta-badge">watsonx.ai</span></div><form id="assistant-form" class="assistant-box"><input id="assistant-query" maxlength="4000" placeholder="Ask about a project or studio workflow" required><button type="submit">Ask</button></form><div id="assistant-response" class="assistant-output" role="status" aria-live="polite">Configure the Edge Function to enable AI responses.</div></section>
+      </div>
+    </section>
 
-            <label>
-              <span>Password</span>
-              <input id="password" type="password" placeholder="••••••••" required />
-            </label>
-
-            <button type="submit">Access Portal</button>
+    <section id="clients" class="tab-panel">
+      <div class="two-column">
+        <section class="card-panel"><div class="panel-header"><h2>Project Intake</h2><span class="meta-badge">Submits to secured database</span></div>
+          <form id="project-form" class="form-grid">
+            <label>Client / Brand<input name="client" maxlength="120" required></label>
+            <label>Project type<select name="type"><option>Brand Identity & Vector Layout</option><option>Cybersecurity Diagram & Infographics</option><option>Custom Web / UI Design</option><option>AI Video Rendering & Motion Assets</option></select></label>
+            <label>Budget<input name="budget" maxlength="40" required></label>
+            <label>Timeline<input name="timeline" maxlength="80" required></label>
+            <label>Scope & objectives<textarea name="scope" rows="4" maxlength="3000"></textarea></label>
+            <button type="submit">Submit project</button>
           </form>
-
-          <div class="demo-login">
-            <p>Demo access</p>
-            <button id="demo-login-btn" type="button">Continue as Demo Admin</button>
-          </div>
-        </div>
-      </aside>
-
-      <main id="portal-screen" class="portal-shell hidden">
-        <header class="topbar">
-          <div class="brand-inline">
-            <div class="brand-mark small">DVAS</div>
-            <div>
-              <p class="eyebrow light">DIVERSE VISUAL ARTS STUDIO</p>
-              <h2>Revenue & Security Portal</h2>
-            </div>
-          </div>
-
-          <div class="topbar-actions">
-            <div class="status-pill success">Session Verified</div>
-            <select id="role-switcher" aria-label="Select role">
-              <option value="admin">Admin</option>
-              <option value="client">Client</option>
-              <option value="investor">Investor</option>
-            </select>
-            <button id="logout-btn" class="ghost-btn" type="button">Sign out</button>
-          </div>
-        </header>
-
-        <nav class="tab-nav" aria-label="Portal navigation">
-          <button class="tab active" data-tab="overview" type="button">Overview</button>
-          <button class="tab" data-tab="clients" type="button">Client Workspace</button>
-          <button class="tab" data-tab="investors" type="button">Investor Hub</button>
-          <button class="tab" data-tab="admin" type="button">Admin Console</button>
-        </nav>
-
-        <section id="overview" class="tab-panel active">
-          <div class="stats-grid">
-            <article class="stat-card accent-pink">
-              <span>Active Projects</span>
-              <strong id="active-projects">18</strong>
-              <small>+3 this quarter</small>
-            </article>
-
-            <article class="stat-card accent-cyan">
-              <span>Revenue Run Rate</span>
-              <strong id="revenue-run-rate">$1.42M</strong>
-              <small>+34.5% QoQ</small>
-            </article>
-
-            <article class="stat-card accent-green">
-              <span>Security Score</span>
-              <strong id="security-score">98/100</strong>
-              <small>Zero critical findings</small>
-            </article>
-
-            <article class="stat-card accent-orange">
-              <span>Delivery SLA</span>
-              <strong id="delivery-sla">92%</strong>
-              <small>On track</small>
-            </article>
-          </div>
-
-          <div class="dashboard-grid">
-            <section class="panel card-panel chart-panel">
-              <div class="panel-header">
-                <h3>Performance Trend</h3>
-                <span class="meta-badge">Last 6 months</span>
-              </div>
-              <div class="chart-bars" aria-label="Revenue chart">
-                <div class="bar-group"><span style="--value: 42%"></span><label>Jan</label></div>
-                <div class="bar-group"><span style="--value: 58%"></span><label>Feb</label></div>
-                <div class="bar-group"><span style="--value: 63%"></span><label>Mar</label></div>
-                <div class="bar-group"><span style="--value: 70%"></span><label>Apr</label></div>
-                <div class="bar-group"><span style="--value: 78%"></span><label>May</label></div>
-                <div class="bar-group"><span style="--value: 90%"></span><label>Jun</label></div>
-              </div>
-            </section>
-
-            <section class="panel card-panel ai-panel">
-              <div class="panel-header">
-                <h3>Ask IBM Bob</h3>
-                <span class="meta-badge">AI assistant</span>
-              </div>
-              <div class="assistant-box">
-                <input id="bob-query" type="text" placeholder="Ask about pipeline health, revenue, or risk" />
-                <button id="bob-submit" type="button">Query</button>
-              </div>
-              <div id="bob-response" class="assistant-output">
-                IBM Bob: Portfolio performance remains healthy. Revenue velocity is above target and security coverage remains at 98/100.
-              </div>
-            </section>
-          </div>
         </section>
+        <section class="card-panel"><div class="panel-header"><h2>Project Queue</h2><button id="refresh-projects" class="secondary-button" type="button">Refresh</button></div><div id="project-list" class="project-list"></div></section>
+      </div>
+    </section>
 
-        <section id="clients" class="tab-panel">
-          <div class="two-column">
-            <section class="panel card-panel">
-              <div class="panel-header">
-                <h3>Project Intake</h3>
-                <span class="meta-badge">IBM Bob guided</span>
-              </div>
+    <section id="investors" class="tab-panel">
+      <section class="card-panel"><div class="panel-header"><h2>Investor Project Snapshot</h2><span class="meta-badge">Database-backed</span></div><div id="investor-list" class="project-list"></div></section>
+    </section>
 
-              <form id="project-form" class="project-form">
-                <label>
-                  <span>Client / Brand</span>
-                  <input name="client" type="text" placeholder="Northstar Media" required />
-                </label>
-
-                <label>
-                  <span>Project Type</span>
-                  <select name="type">
-                    <option>Brand Identity & Vector Layout</option>
-                    <option>Cybersecurity Diagram & Infographics</option>
-                    <option>Custom Web / UI Design</option>
-                    <option>AI Video Rendering & Motion Assets</option>
-                  </select>
-                </label>
-
-                <label>
-                  <span>Budget</span>
-                  <input name="budget" type="text" placeholder="$25,000" required />
-                </label>
-
-                <label>
-                  <span>Timeline</span>
-                  <input name="timeline" type="text" placeholder="4 weeks" required />
-                </label>
-
-                <label>
-                  <span>Scope & Objectives</span>
-                  <textarea name="scope" rows="4" placeholder="Describe deliverables, visual objectives, and security requirements..."></textarea>
-                </label>
-
-                <button type="submit">Submit Project</button>
-              </form>
-            </section>
-
-            <section class="panel card-panel">
-              <div class="panel-header">
-                <h3>Project Queue</h3>
-                <span class="meta-badge">Live</span>
-              </div>
-              <div id="project-list" class="project-list"></div>
-            </section>
-          </div>
-        </section>
-
-        <section id="investors" class="tab-panel">
-          <div class="three-column metrics-row">
-            <article class="stat-mini">
-              <span>Portfolio Value</span>
-              <strong>$4.8M</strong>
-            </article>
-            <article class="stat-mini">
-              <span>Asset Volume</span>
-              <strong>142 Assets</strong>
-            </article>
-            <article class="stat-mini">
-              <span>Risk Exposure</span>
-              <strong>Low</strong>
-            </article>
-          </div>
-
-          <section class="panel card-panel">
-            <div class="panel-header">
-              <h3>Investor Snapshot</h3>
-              <span class="meta-badge">Quarterly view</span>
-            </div>
-            <div class="table-shell">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Client</th>
-                    <th>Revenue</th>
-                    <th>Risk</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Aster Labs</td>
-                    <td>$340k</td>
-                    <td>Low</td>
-                    <td>Healthy</td>
-                  </tr>
-                  <tr>
-                    <td>Vector Horizon</td>
-                    <td>$280k</td>
-                    <td>Medium</td>
-                    <td>Growing</td>
-                  </tr>
-                  <tr>
-                    <td>Northstar Media</td>
-                    <td>$420k</td>
-                    <td>Low</td>
-                    <td>Innovating</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
-        </section>
-
-        <section id="admin" class="tab-panel">
-          <section class="panel card-panel">
-            <div class="panel-header">
-              <h3>Threat & Audit Ledger</h3>
-              <span class="meta-badge">Real-time</span>
-            </div>
-            <div class="table-shell">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Timestamp</th>
-                    <th>User</th>
-                    <th>Action</th>
-                    <th>Security Flag</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>12:54:10</td>
-                    <td>client_8819</td>
-                    <td>PROJECT_INTAKE_SUBMIT</td>
-                    <td class="success-text">PASSED (0 Threats)</td>
-                  </tr>
-                  <tr>
-                    <td>12:48:02</td>
-                    <td>investor_002</td>
-                    <td>ANALYTICS_VIEW_QUERY</td>
-                    <td class="success-text">PASSED (Scoped View)</td>
-                  </tr>
-                  <tr>
-                    <td>12:32:17</td>
-                    <td>admin_001</td>
-                    <td>IAM_SYNC</td>
-                    <td class="success-text">VERIFIED</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
-        </section>
-      </main>
-    </div>
-
-    <script src="app.js"></script>
-  </body>
+    <section id="admin" class="tab-panel">
+      <section class="card-panel"><div class="panel-header"><h2>Admin Console</h2><span class="meta-badge">Role-restricted</span></div><p>Project administration and audit access are protected by database row-level security. Assign administrator roles only through the trusted Supabase SQL editor.</p><div id="admin-project-list" class="project-list"></div></section>
+    </section>
+  </main>
+</body>
 </html>
