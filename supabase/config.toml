@@ -1,1 +1,6 @@
-{"functions":{"dvas-assistant":{"verify_jwt":true}}}
+window.DVAS_CONFIG = {
+  supabaseUrl: 'https://YOUR_PROJECT_ID.supabase.co',
+  supabaseAnonKey: 'YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY'
+};
+
+// Replace with your real values when preparing a live deployment.
