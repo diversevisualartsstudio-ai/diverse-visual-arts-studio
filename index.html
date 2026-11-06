@@ -1,182 +1,678 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DVAS — Revenue & Security Portal</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    :root {
-      --dvas-bg: #0D0D11;
-      --dvas-card: #16161E;
-      --dvas-pink: #FF007F;
-      --dvas-green: #39FF14;
-      --dvas-orange: #FF5E00;
-      --dvas-cyan: #00F0FF;
-    }
-    body { background-color: var(--dvas-bg); color: #F4F4F6; font-family: system-ui, sans-serif; }
-    .neon-border-pink { border-color: var(--dvas-pink); box-shadow: 0 0 12px rgba(255,0,127,0.3); }
-    .neon-border-green { border-color: var(--dvas-green); box-shadow: 0 0 12px rgba(57,255,20,0.3); }
-    .metallic-title { background: linear-gradient(135deg, #FFF 0%, #FF007F 50%, #00F0FF 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  </style>
-</head>
-<body class="min-h-screen p-6">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DVAS Portal</title>
+    <meta
+      name="description"
+      content="DVAS Revenue & Security Portal with client workspace, investor analytics, and IBM Bob assistant support."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="app-shell">
+      <aside id="auth-screen" class="auth-shell">
+        <div class="auth-card">
+          <div class="brand-block">
+            <div class="brand-mark">DVAS</div>
+            <div>
+              <p class="eyebrow">REVENUE / SECURITY / DESIGN</p>
+              <h1>DVAS Portal</h1>
+            </div>
+          </div>
 
-  <!-- Header & Navigation -->
-  <header class="flex flex-wrap items-center justify-between pb-6 mb-8 border-b border-gray-800">
-    <div class="flex items-center space-x-3">
-      <div class="w-10 h-10 rounded-full border-2 border-[#FF007F] flex items-center justify-center font-bold text-[#39FF14]">DVAS</div>
-      <h1 class="text-2xl font-extrabold tracking-wider metallic-title">DIVERSE VISUAL ARTS STUDIO</h1>
-    </div>
-    
-    <div class="flex items-center space-x-4">
-      <div class="px-3 py-1 text-xs rounded-full bg-[#16161E] border border-[#39FF14] text-[#39FF14] flex items-center space-x-2">
-        <span class="w-2 h-2 rounded-full bg-[#39FF14] animate-pulse"></span>
-        <span>MFA SESSION ACTIVE</span>
-      </div>
-      <select id="roleSelect" onchange="switchRole(this.value)" class="bg-[#16161E] border border-gray-700 text-sm rounded px-3 py-1">
-        <option value="admin">Role: Admin (Owner)</option>
-        <option value="client">Role: Client / Hirer</option>
-        <option value="investor">Role: Investor / Sponsor</option>
-      </select>
-    </div>
-  </header>
+          <div class="badge-row">
+            <span class="status-pill success">MFA Active</span>
+            <span class="status-pill neutral">IBM Bob Ready</span>
+          </div>
 
-  <!-- Navigation Tabs -->
-  <div class="flex space-x-4 mb-8">
-    <button onclick="showTab('client')" id="btn-client" class="px-5 py-2 rounded font-semibold text-sm bg-[#FF007F] text-white">Client Workspace</button>
-    <button onclick="showTab('investor')" id="btn-investor" class="px-5 py-2 rounded font-semibold text-sm bg-[#16161E] text-gray-400">Investor Hub</button>
-    <button onclick="showTab('admin')" id="btn-admin" class="px-5 py-2 rounded font-semibold text-sm bg-[#16161E] text-gray-400">Admin Console</button>
-  </div>
+          <form id="login-form" class="login-form">
+            <label>
+              <span>Email</span>
+              <input id="email" type="email" placeholder="name@dvas.studio" required />
+            </label>
 
-  <!-- TAB 1: CLIENT WORKSPACE -->
-  <section id="tab-client" class="grid grid-cols-1 md:grid-cols-2 gap-8">
-    <div class="bg-[#16161E] border border-gray-800 rounded-xl p-6">
-      <h2 class="text-lg font-bold text-[#FF007F] mb-4">Project Intake Wizard (IBM Bob Assisted)</h2>
-      <form onsubmit="handleIntake(event)" class="space-y-4">
-        <div>
-          <label class="block text-xs font-mono text-gray-400 mb-1">PROJECT TYPE</label>
-          <select class="w-full bg-[#0D0D11] border border-gray-700 rounded p-2 text-sm">
-            <option>Brand Identity & Vector Layout</option>
-            <option>Cybersecurity Diagram & Infographics</option>
-            <option>Custom Web / UI Design</option>
-            <option>AI Video Rendering & Motion Assets</option>
-          </select>
+            <label>
+              <span>Password</span>
+              <input id="password" type="password" placeholder="••••••••" required />
+            </label>
+
+            <button type="submit">Access Portal</button>
+          </form>
+
+          <div class="demo-login">
+            <p>Demo access</p>
+            <button id="demo-login-btn" type="button">Continue as Demo Admin</button>
+          </div>
         </div>
-        <div>
-          <label class="block text-xs font-mono text-gray-400 mb-1">PROJECT SCOPE & OBJECTIVES</label>
-          <textarea rows="3" class="w-full bg-[#0D0D11] border border-gray-700 rounded p-2 text-sm" placeholder="Describe scope, assets, and design preferences..."></textarea>
-        </div>
-        <button type="submit" class="w-full py-3 bg-[#FF007F] font-bold text-sm rounded hover:opacity-90">Initiate Pre-Scan & Brief Generation</button>
-      </form>
-      <div id="intakeStatus" class="hidden mt-4 p-3 bg-[#0D0D11] border border-[#39FF14] text-[#39FF14] text-xs font-mono rounded">
-        ✓ IBM Bob Pre-Scan Complete: Security baseline verified. Brief routed to Admin queue.
-      </div>
+      </aside>
+
+      <main id="portal-screen" class="portal-shell hidden">
+        <header class="topbar">
+          <div class="brand-inline">
+            <div class="brand-mark small">DVAS</div>
+            <div>
+              <p class="eyebrow light">DIVERSE VISUAL ARTS STUDIO</p>
+              <h2>Revenue & Security Portal</h2>
+            </div>
+          </div>
+
+          <div class="topbar-actions">
+            <div class="status-pill success">Session Verified</div>
+            <select id="role-switcher" aria-label="Select role">
+              <option value="admin">Admin</option>
+              <option value="client">Client</option>
+              <option value="investor">Investor</option>
+            </select>
+            <button id="logout-btn" class="ghost-btn" type="button">Sign out</button>
+          </div>
+        </header>
+
+        <nav class="tab-nav" aria-label="Portal navigation">
+          <button class="tab active" data-tab="overview" type="button">Overview</button>
+          <button class="tab" data-tab="clients" type="button">Client Workspace</button>
+          <button class="tab" data-tab="investors" type="button">Investor Hub</button>
+          <button class="tab" data-tab="admin" type="button">Admin Console</button>
+        </nav>
+
+        <section id="overview" class="tab-panel active">
+          <div class="stats-grid">
+            <article class="stat-card accent-pink">
+              <span>Active Projects</span>
+              <strong id="active-projects">18</strong>
+              <small>+3 this quarter</small>
+            </article>
+
+            <article class="stat-card accent-cyan">
+              <span>Revenue Run Rate</span>
+              <strong id="revenue-run-rate">$1.42M</strong>
+              <small>+34.5% QoQ</small>
+            </article>
+
+            <article class="stat-card accent-green">
+              <span>Security Score</span>
+              <strong id="security-score">98/100</strong>
+              <small>Zero critical findings</small>
+            </article>
+
+            <article class="stat-card accent-orange">
+              <span>Delivery SLA</span>
+              <strong id="delivery-sla">92%</strong>
+              <small>On track</small>
+            </article>
+          </div>
+
+          <div class="dashboard-grid">
+            <section class="panel card-panel chart-panel">
+              <div class="panel-header">
+                <h3>Performance Trend</h3>
+                <span class="meta-badge">Last 6 months</span>
+              </div>
+              <div class="chart-bars" aria-label="Revenue chart">
+                <div class="bar-group"><span style="--value: 42%"></span><label>Jan</label></div>
+                <div class="bar-group"><span style="--value: 58%"></span><label>Feb</label></div>
+                <div class="bar-group"><span style="--value: 63%"></span><label>Mar</label></div>
+                <div class="bar-group"><span style="--value: 70%"></span><label>Apr</label></div>
+                <div class="bar-group"><span style="--value: 78%"></span><label>May</label></div>
+                <div class="bar-group"><span style="--value: 90%"></span><label>Jun</label></div>
+              </div>
+            </section>
+
+            <section class="panel card-panel ai-panel">
+              <div class="panel-header">
+                <h3>Ask IBM Bob</h3>
+                <span class="meta-badge">AI assistant</span>
+              </div>
+              <div class="assistant-box">
+                <input id="bob-query" type="text" placeholder="Ask about pipeline health, revenue, or risk" />
+                <button id="bob-submit" type="button">Query</button>
+              </div>
+              <div id="bob-response" class="assistant-output">
+                IBM Bob: Portfolio performance remains healthy. Revenue velocity is above target and security coverage remains at 98/100.
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section id="clients" class="tab-panel">
+          <div class="two-column">
+            <section class="panel card-panel">
+              <div class="panel-header">
+                <h3>Project Intake</h3>
+                <span class="meta-badge">IBM Bob guided</span>
+              </div>
+
+              <form id="project-form" class="project-form">
+                <label>
+                  <span>Client / Brand</span>
+                  <input name="client" type="text" placeholder="Northstar Media" required />
+                </label>
+
+                <label>
+                  <span>Project Type</span>
+                  <select name="type">
+                    <option>Brand Identity & Vector Layout</option>
+                    <option>Cybersecurity Diagram & Infographics</option>
+                    <option>Custom Web / UI Design</option>
+                    <option>AI Video Rendering & Motion Assets</option>
+                  </select>
+                </label>
+
+                <label>
+                  <span>Budget</span>
+                  <input name="budget" type="text" placeholder="$25,000" required />
+                </label>
+
+                <label>
+                  <span>Timeline</span>
+                  <input name="timeline" type="text" placeholder="4 weeks" required />
+                </label>
+
+                <label>
+                  <span>Scope & Objectives</span>
+                  <textarea name="scope" rows="4" placeholder="Describe deliverables, visual objectives, and security requirements..."></textarea>
+                </label>
+
+                <button type="submit">Submit Project</button>
+              </form>
+            </section>
+
+            <section class="panel card-panel">
+              <div class="panel-header">
+                <h3>Project Queue</h3>
+                <span class="meta-badge">Live</span>
+              </div>
+              <div id="project-list" class="project-list"></div>
+            </section>
+          </div>
+        </section>
+
+        <section id="investors" class="tab-panel">
+          <div class="three-column metrics-row">
+            <article class="stat-mini">
+              <span>Portfolio Value</span>
+              <strong>$4.8M</strong>
+            </article>
+            <article class="stat-mini">
+              <span>Asset Volume</span>
+              <strong>142 Assets</strong>
+            </article>
+            <article class="stat-mini">
+              <span>Risk Exposure</span>
+              <strong>Low</strong>
+            </article>
+          </div>
+
+          <section class="panel card-panel">
+            <div class="panel-header">
+              <h3>Investor Snapshot</h3>
+              <span class="meta-badge">Quarterly view</span>
+            </div>
+            <div class="table-shell">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Client</th>
+                    <th>Revenue</th>
+                    <th>Risk</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Aster Labs</td>
+                    <td>$340k</td>
+                    <td>Low</td>
+                    <td>Healthy</td>
+                  </tr>
+                  <tr>
+                    <td>Vector Horizon</td>
+                    <td>$280k</td>
+                    <td>Medium</td>
+                    <td>Growing</td>
+                  </tr>
+                  <tr>
+                    <td>Northstar Media</td>
+                    <td>$420k</td>
+                    <td>Low</td>
+                    <td>Innovating</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </section>
+
+        <section id="admin" class="tab-panel">
+          <section class="panel card-panel">
+            <div class="panel-header">
+              <h3>Threat & Audit Ledger</h3>
+              <span class="meta-badge">Real-time</span>
+            </div>
+            <div class="table-shell">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Timestamp</th>
+                    <th>User</th>
+                    <th>Action</th>
+                    <th>Security Flag</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>12:54:10</td>
+                    <td>client_8819</td>
+                    <td>PROJECT_INTAKE_SUBMIT</td>
+                    <td class="success-text">PASSED (0 Threats)</td>
+                  </tr>
+                  <tr>
+                    <td>12:48:02</td>
+                    <td>investor_002</td>
+                    <td>ANALYTICS_VIEW_QUERY</td>
+                    <td class="success-text">PASSED (Scoped View)</td>
+                  </tr>
+                  <tr>
+                    <td>12:32:17</td>
+                    <td>admin_001</td>
+                    <td>IAM_SYNC</td>
+                    <td class="success-text">VERIFIED</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </section>
+      </main>
     </div>
 
-    <div class="bg-[#16161E] border border-gray-800 rounded-xl p-6">
-      <h2 class="text-lg font-bold text-[#00F0FF] mb-4">Active Milestone Tracker</h2>
-      <div class="mb-4">
-        <div class="flex justify-between text-xs font-mono mb-1">
-          <span>STATUS: IN PROGRESS</span>
-          <span>65%</span>
-        </div>
-        <div class="w-full bg-gray-800 rounded-full h-2">
-          <div class="bg-[#39FF14] h-2 rounded-full" style="width: 65%"></div>
-        </div>
-      </div>
-      <ul class="text-sm space-y-2 text-gray-300 font-mono">
-        <li>✓ Step 1: Brief Processed & IAM Verified</li>
-        <li>✓ Step 2: Threat Modeling & SAST Guardrails Applied</li>
-        <li>► Step 3: Vector Asset Rendering & Encryption Scan</li>
-        <li class="text-gray-600">○ Step 4: Vault Delivery & Smart Contract Release</li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- TAB 2: INVESTOR HUB -->
-  <section id="tab-investor" class="hidden space-y-8">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div class="bg-[#16161E] border border-gray-800 p-6 rounded-xl">
-        <p class="text-xs font-mono text-gray-400">ACTIVE CLIENT PROJECTS</p>
-        <p class="text-3xl font-extrabold text-[#39FF14] mt-2">18</p>
-      </div>
-      <div class="bg-[#16161E] border border-gray-800 p-6 rounded-xl">
-        <p class="text-xs font-mono text-gray-400">DIGITAL ASSET VOLUME</p>
-        <p class="text-3xl font-extrabold text-[#00F0FF] mt-2">142</p>
-      </div>
-      <div class="bg-[#16161E] border border-gray-800 p-6 rounded-xl">
-        <p class="text-xs font-mono text-gray-400">QoQ REVENUE GROWTH</p>
-        <p class="text-3xl font-extrabold text-[#FF007F] mt-2">+34.5%</p>
-      </div>
-    </div>
-
-    <div class="bg-[#16161E] border border-gray-800 p-6 rounded-xl">
-      <h3 class="text-lg font-bold text-[#FF5E00] mb-4">Ask IBM Bob (Investor Assistant)</h3>
-      <div class="flex space-x-2">
-        <input id="chatInput" type="text" class="flex-1 bg-[#0D0D11] border border-gray-700 rounded p-2 text-sm" placeholder="Ask about revenue projections, asset volume, or security guardrails...">
-        <button onclick="askBob()" class="px-4 py-2 bg-[#FF5E00] font-bold text-sm rounded">Query</button>
-      </div>
-      <div id="chatOutput" class="hidden mt-4 p-3 bg-[#0D0D11] text-xs font-mono text-gray-300 rounded border border-gray-800"></div>
-    </div>
-  </section>
-
-  <!-- TAB 3: ADMIN CONSOLE -->
-  <section id="tab-admin" class="hidden space-y-8">
-    <div class="bg-[#16161E] border border-gray-800 p-6 rounded-xl">
-      <h3 class="text-lg font-bold text-[#39FF14] mb-4">Real-Time Threat & Audit Ledger</h3>
-      <table class="w-full text-left text-xs font-mono">
-        <thead>
-          <tr class="border-b border-gray-800 text-gray-400">
-            <th class="py-2">TIMESTAMP</th>
-            <th>USER / ROLE</th>
-            <th>ACTION</th>
-            <th>SECURITY FLAG</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-800">
-          <tr>
-            <td class="py-2 text-gray-500">12:54:10</td>
-            <td>client_8819</td>
-            <td>PROJECT_INTAKE_SUBMIT</td>
-            <td class="text-[#39FF14]">PASSED (0 Threats)</td>
-          </tr>
-          <tr>
-            <td class="py-2 text-gray-500">12:48:02</td>
-            <td>investor_002</td>
-            <td>ANALYTICS_VIEW_QUERY</td>
-            <td class="text-[#39FF14]">PASSED (Scoped View)</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <script>
-    function showTab(tabName) {
-      ['client', 'investor', 'admin'].forEach(t => {
-        document.getElementById(`tab-${t}`).classList.add('hidden');
-        document.getElementById(`btn-${t}`).className = "px-5 py-2 rounded font-semibold text-sm bg-[#16161E] text-gray-400";
-      });
-      document.getElementById(`tab-${tabName}`).classList.remove('hidden');
-      document.getElementById(`btn-${tabName}`).className = "px-5 py-2 rounded font-semibold text-sm bg-[#FF007F] text-white";
-    }
-
-    function handleIntake(e) {
-      e.preventDefault();
-      document.getElementById('intakeStatus').classList.remove('hidden');
-    }
-
-    function askBob() {
-      const q = document.getElementById('chatInput').value;
-      const out = document.getElementById('chatOutput');
-      out.classList.remove('hidden');
-      out.innerText = `[IBM Bob]: Query parsed: "${q}". Studio growth remains strong at +34.5% QoQ with zero reported smart contract vulnerabilities.`;
-    }
-
-    function switchRole(role) {
-      showTab(role === 'admin' ? 'admin' : role === 'investor' ? 'investor' : 'client');
-    }
-  </script>
-</body>
+    <script src="app.js"></script>
+  </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
