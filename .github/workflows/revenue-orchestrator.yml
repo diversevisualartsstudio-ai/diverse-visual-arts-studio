@@ -1,0 +1,40 @@
+name: DVA Revenue Orchestrator Validation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "revenue-orchestrator/**"
+      - "json_spec/**"
+      - ".github/workflows/revenue-orchestrator.yml"
+  pull_request:
+    paths:
+      - "revenue-orchestrator/**"
+      - "json_spec/**"
+      - ".github/workflows/revenue-orchestrator.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate JavaScript syntax
+        run: node --check revenue-orchestrator/app.js
+      - name: Validate workflow JSON
+        run: node -e "JSON.parse(require('fs').readFileSync('json_spec/intake-workflow.json','utf8')); console.log('Workflow JSON is valid')"
+      - name: Verify required app files
+        run: |
+          test -s revenue-orchestrator/index.html
+          test -s revenue-orchestrator/styles.css
+          test -s revenue-orchestrator/app.js
+          grep -q "DVA Revenue Orchestrator" revenue-orchestrator/index.html
+      - name: Check whitespace errors
+        run: git diff --check
