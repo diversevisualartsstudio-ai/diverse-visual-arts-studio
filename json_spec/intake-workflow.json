@@ -1,0 +1,63 @@
+{
+  "name": "DiverseVisualArts Revenue Orchestrator",
+  "version": "0.1.0",
+  "mode": "mvp-demo",
+  "description": "Intake, classify, recommend a discovery package, and route sensitive requests to human review.",
+  "trigger": {
+    "type": "web_project_intake",
+    "required": ["client.name", "client.email", "project.service", "project.description"]
+  },
+  "capture": [
+    "client.name",
+    "client.business",
+    "client.email",
+    "project.service",
+    "project.description",
+    "project.timeline",
+    "project.budget",
+    "project.industry",
+    "project.sensitive"
+  ],
+  "classification": {
+    "rules": [
+      { "when": "service or description indicates cybersecurity, network, or security visuals", "route": "technical_visual_workflow", "package": "Cyber Visual Intelligence — scope to be confirmed" },
+      { "when": "service or description indicates AI agent, automation, or workflow", "route": "ai_automation_workflow", "package": "AI Workflow Discovery — scope to be confirmed" },
+      { "when": "service or description indicates website, UX, or UI", "route": "web_digital_workflow", "package": "Digital Experience Discovery" },
+      { "when": "service or description indicates branding, logo, or graphic design", "route": "brand_design_workflow", "package": "Brand Identity Discovery" },
+      { "when": "no specific service rule matches", "route": "general_creative_intake", "package": "Creative Project Discovery" }
+    ],
+    "sensitive_review": {
+      "priority": "highest",
+      "trigger": ["client marks request sensitive", "confidential or proprietary material", "credentials or access tokens", "personal or patient data", "internal network or production IP details"],
+      "route": "human_review_required",
+      "automated_processing": "pause",
+      "instruction": "Do not request secrets or sensitive source material through the public intake form. Arrange an approved secure channel with a human reviewer."
+    }
+  },
+  "reasoning": {
+    "steps": ["validate required intake", "classify service intent", "check sensitive-review rules", "recommend discovery package", "prepare a draft summary"]
+  },
+  "output": {
+    "fields": ["project_id", "route", "recommended_package", "human_review_required", "status", "proposal_summary"],
+    "pricing": "not quoted by demo; final pricing requires human confirmation"
+  },
+  "loop": {
+    "next": ["human confirms scope", "request missing non-sensitive details", "prepare proposal", "schedule consultation"]
+  },
+  "guardrails": [
+    "Never expose API keys, passwords, access tokens, or secrets to browser code.",
+    "Do not accept confidential network diagrams or regulated personal data in the public demo form.",
+    "Sensitive requests must be routed to a human reviewer before technical processing.",
+    "Do not claim a proposal, appointment, invoice, or payment was created unless its integration confirms success.",
+    "AI package recommendations are suggestions, not binding quotes."
+  ],
+  "integrations": {
+    "watsonx_orchestrate": { "status": "not_configured", "required": ["tenant_url", "agent_or_skill_id", "server_side_authentication"] },
+    "watson_speech_to_text": { "status": "not_configured" },
+    "watson_text_to_speech": { "status": "not_configured" },
+    "crm": { "status": "not_configured" },
+    "calendar": { "status": "not_configured" },
+    "invoicing": { "status": "not_configured" }
+  },
+  "impact_metrics": ["qualified_intakes", "human_review_rate", "time_to_first_response", "proposal_conversion_rate", "consultation_bookings"]
+}
